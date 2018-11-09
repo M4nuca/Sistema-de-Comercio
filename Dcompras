@@ -1,0 +1,336 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace CamadaDados
+{
+    public class DCompras
+    {
+        private int _Identrada;
+        private string _Cliente;
+        private string _Descricao;
+        float _Valor; 
+        private string _TextoBuscar;
+
+        public int Identrada
+
+        {
+            get
+            {
+                return _Identrada;
+            }
+
+            set
+            {
+                _Identrada = value;
+            }
+        }
+
+        public string Cliente
+        {
+            get
+            {
+                return _Cliente;
+            }
+
+            set
+            {
+                _Cliente = value;
+            }
+        }
+
+        public string Descricao
+        {
+            get
+            {
+                return _Descricao;
+            }
+
+            set
+            {
+                _Descricao = value;
+            }
+        }
+
+
+        public float Valor
+        {
+            get
+            {
+                return _Valor;
+            }
+
+            set
+            {
+                _Valor = value;
+            }
+        }
+
+        public string TextoBuscar
+        {
+            get
+            {
+                return _TextoBuscar;
+            }
+
+            set
+            {
+                _TextoBuscar = value;
+            }
+        }
+
+        //Construtor Vazio
+
+        public DCompras()
+        {
+
+        }
+
+
+        //Construtor com Parametros
+        public DCompras(int identrada, string cliente, string descricao,float valor, string textobuscar)
+        {
+            this._Identrada = identrada;
+            this.Cliente = cliente;
+            this.Descricao = descricao;
+            this.Valor = valor;
+            this.TextoBuscar = textobuscar;
+
+        }
+
+
+        //Método Inserir
+        public string Inserir(DCompras Compra)
+        {
+            string resp = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                //codigo
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCon.Open();
+
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "inserir_compra";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter ParIdentrada= new SqlParameter();
+                ParIdentrada.ParameterName = "@identrada";
+                ParIdentrada.SqlDbType=SqlDbType.Int;
+                ParIdentrada.Direction = ParameterDirection.Output;
+                SqlCmd.Parameters.Add(ParIdentrada);
+
+
+                SqlParameter ParCliente = new SqlParameter();
+                ParCliente.ParameterName = "@cliente";
+                ParCliente.SqlDbType = SqlDbType.VarChar;
+                ParCliente.Size = 50;
+                ParCliente.Value = Compra.Cliente;
+                SqlCmd.Parameters.Add(ParCliente);
+
+
+                SqlParameter ParDescricao = new SqlParameter();
+                ParDescricao.ParameterName = "@descricao";
+                ParDescricao.SqlDbType = SqlDbType.VarChar;
+                ParDescricao.Size = 150;
+                ParDescricao.Value =  Compra.Descricao;
+                SqlCmd.Parameters.Add(ParDescricao);
+
+
+                SqlParameter ParValor = new SqlParameter();
+                ParValor.ParameterName = "@valor_compra";
+                ParValor.SqlDbType = SqlDbType.Float;
+                ParValor.Value = Compra.Valor;
+                SqlCmd.Parameters.Add(ParValor);
+                //Executar o comando
+
+                resp = SqlCmd.ExecuteNonQuery() == 1 ? "OK" : "Registro não foi Inserido";
+
+
+            }
+            catch(Exception ex)
+            {
+                resp = ex.Message;
+            }
+
+            finally
+            {
+                if(SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return resp;
+
+        }
+
+
+        //Método Editar
+        public string Editar(DCompras Compra)
+        {
+            string resp = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                //codigo
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCon.Open();
+
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "editar_entrada";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter ParIdentrada = new SqlParameter();
+                ParIdentrada.ParameterName = "@identrada";
+                ParIdentrada.SqlDbType = SqlDbType.Int;
+                ParIdentrada.Value = Compra._Identrada;
+                SqlCmd.Parameters.Add(ParIdentrada);
+
+
+                SqlParameter ParCliente = new SqlParameter();
+                ParCliente.ParameterName = "@cliente";
+                ParCliente.SqlDbType = SqlDbType.VarChar;
+                ParCliente.Size = 50;
+                ParCliente.Value = Compra.Cliente;
+                SqlCmd.Parameters.Add(ParCliente);
+
+
+                SqlParameter ParDescricao = new SqlParameter();
+                ParDescricao.ParameterName = "@descricao";
+                ParDescricao.SqlDbType = SqlDbType.VarChar;
+                ParDescricao.Size = 150;
+                ParDescricao.Value = Compra.Descricao;
+                SqlCmd.Parameters.Add(ParDescricao);
+
+                SqlParameter ParValor = new SqlParameter();
+                ParValor.ParameterName = "@valor_compra";
+                ParValor.SqlDbType = SqlDbType.Float;
+                ParValor.Value = Compra.Valor;
+                SqlCmd.Parameters.Add(ParValor);
+
+                //Executar o comando
+
+                resp = SqlCmd.ExecuteNonQuery() == 1 ? "OK" : "A edição não foi feita";
+
+
+            }
+            catch (Exception ex)
+            {
+                resp = ex.Message;
+            }
+
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return resp;
+
+        }
+
+
+        //Método Excluir
+        public string Excluir(DCompras Compra)
+        {
+            string resp = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                //codigo
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCon.Open();
+
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "deletar_compra";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter ParIdEntrada = new SqlParameter();
+                ParIdEntrada.ParameterName = "@identrada";
+                ParIdEntrada.SqlDbType = SqlDbType.Int;
+                ParIdEntrada.Value = Compra.Identrada;
+                SqlCmd.Parameters.Add(ParIdEntrada);
+
+
+
+                //Executar o comando
+
+                resp = SqlCmd.ExecuteNonQuery() == 1 ? "OK" : "A exclusão não foi feita";
+
+
+            }
+            catch (Exception ex)
+            {
+                resp = ex.Message;
+            }
+
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return resp;
+        }
+
+
+        //Método Mostrar
+        public DataTable Mostrar()
+        {
+            DataTable DtResultado = new DataTable("entrada_compra");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "mostrar_compras";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+
+         }catch(Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }
+
+
+        //Método Buscar Nome
+        public DataTable BuscarNome(DCompras Entrada)
+        {
+            DataTable DtResultado = new DataTable("entrada");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "buscar_cliente";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+                
+
+                SqlParameter ParTextoBuscar = new SqlParameter();
+                ParTextoBuscar.ParameterName = "@textobuscar";
+                ParTextoBuscar.SqlDbType = SqlDbType.VarChar;
+                ParTextoBuscar.Size = 50;
+                ParTextoBuscar.Value = Entrada.TextoBuscar;
+                SqlCmd.Parameters.Add(ParTextoBuscar);
+
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+
+            }
+            catch (Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }
+
+    }
+    
+}
