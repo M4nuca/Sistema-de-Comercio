@@ -1,0 +1,22 @@
+  public DataTable Mostrar()
+        {
+            DataTable DtResultado = new DataTable("entrada_compra");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "mostrar_compras";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+                SqlCmd.Parameters.Clear();
+
+         }catch(Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }

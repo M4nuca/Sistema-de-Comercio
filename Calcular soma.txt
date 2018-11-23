@@ -1,0 +1,32 @@
+//Método Buscar soma
+        public DataTable Buscarvalorsoma(DCompras Entrada)
+        {
+            DataTable DtResultado = new DataTable("entrada");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "soma_valor";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+
+
+                SqlParameter ParTextoBuscar = new SqlParameter();
+                ParTextoBuscar.ParameterName = "@txtcodigo";
+                ParTextoBuscar.SqlDbType = SqlDbType.VarChar;
+                ParTextoBuscar.Size = 50;
+                ParTextoBuscar.Value = Entrada.TxtCodigo;
+                SqlCmd.Parameters.Add(ParTextoBuscar);
+
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+
+            }
+            catch (Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }

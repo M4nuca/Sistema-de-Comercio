@@ -1,0 +1,38 @@
+private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult Opcao;
+                Opcao = MessageBox.Show("Realmente Deseja apagar os Registros", "Sistema Comércio", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (Opcao == DialogResult.OK)
+                {
+                    string Codigo;
+                    string Resp = "";
+
+                    foreach (DataGridViewRow row in dataLista.Rows)
+                    {
+                        if (Convert.ToBoolean(row.Cells[0].Value))
+                        {
+                            Codigo = Convert.ToString(row.Cells[1].Value);
+                            Resp = NCompras.Excluir(Convert.ToInt32(Codigo));
+
+                            if (Resp.Equals("OK"))
+                            {
+                                this.MensagemOk("Registro excluido com sucesso");
+
+                            }
+                            else
+                            {
+                                this.MensagemErro(Resp);
+                            }
+                        }
+                    }
+                    this.Mostrar();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + ex.StackTrace);
+            }
+
+        }

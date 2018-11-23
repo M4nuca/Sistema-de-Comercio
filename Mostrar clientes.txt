@@ -1,0 +1,23 @@
+//Método Mostrar tabela de clientes
+        public DataTable MostrarTabelaClientes()
+        {
+            DataTable DtResultado = new DataTable("datacliente");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "buscar_listacliente";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+
+            }
+            catch (Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }

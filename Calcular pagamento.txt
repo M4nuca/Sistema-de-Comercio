@@ -1,0 +1,60 @@
+public string pagamentos(DCompras Compra)
+        {
+            string resp = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                //codigo
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCon.Open();
+
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "valor_pagamento";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter ParCod = new SqlParameter();
+                ParCod.ParameterName = "@codigo";
+                ParCod.SqlDbType = SqlDbType.Int;
+                ParCod.Value = Compra.Codigo;
+                SqlCmd.Parameters.Add(ParCod);
+
+                SqlParameter ParCliente = new SqlParameter();
+                ParCliente.ParameterName = "@nome";
+                ParCliente.SqlDbType = SqlDbType.VarChar;
+                ParCliente.Size = 50;
+                ParCliente.Value = Compra.Nome;
+                SqlCmd.Parameters.Add(ParCliente);
+
+             //   SqlParameter ParDescricao = new SqlParameter();
+             //   ParDescricao.ParameterName = "@descricao";
+             //   ParDescricao.SqlDbType = SqlDbType.VarChar;
+             //   ParDescricao.Size = 150;
+             //   ParDescricao.Value = Compra.Descricao2;
+             //   SqlCmd.Parameters.Add(ParDescricao);
+
+                SqlParameter Parpagamento = new SqlParameter();
+                Parpagamento.ParameterName = "@pagamento";
+                Parpagamento.SqlDbType = SqlDbType.Float;
+                Parpagamento.Value = Compra.Pagamento;
+                SqlCmd.Parameters.Add(Parpagamento);
+                //Executar o comando
+
+                resp = SqlCmd.ExecuteNonQuery() == 1 ? "OK" : "Registro não foi Inserido";
+
+
+            }
+            catch (Exception ex)
+            {
+                resp = ex.Message;
+            }
+
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return resp;
+
+        }
+
+    }

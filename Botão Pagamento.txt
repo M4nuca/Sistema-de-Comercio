@@ -1,0 +1,51 @@
+ private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string resp = "";
+                if (this.txtNome.Text == string.Empty)
+                {
+                    MensagemErro("Preencha todos os campos");
+                    errorIcone.SetError(txtNome, "Insira o nome");
+
+                }
+                else
+                {
+                    if (this.eNovo)
+                    {
+                        resp = NCompras.Inserircompra(int.Parse(txtcodigo.Text),this.txtNome.Text.Trim().ToUpper(), float.Parse(txtpagamento.Text));
+                    }
+                    else
+                    {
+
+                    }
+
+                    if (resp.Equals("OK"))
+                    {
+                        if (this.eNovo)
+                        {
+                            this.MensagemOk("Registro salvo com sucesso");
+                        }
+                        else
+                        {
+                            this.MensagemOk("Registro editado com sucesso");
+                        }
+                    }
+                    else
+                    {
+                        this.MensagemErro(resp);
+                    }
+
+                    this.eNovo = false;
+                    this.eEditar = false;
+                    this.botoes();
+                    this.Limpar();
+                    this.Mostrar();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + ex.StackTrace);
+            }
+        }

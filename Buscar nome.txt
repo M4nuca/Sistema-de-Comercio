@@ -1,0 +1,32 @@
+  //Método Buscar Nome
+        public DataTable BuscarNome(DCompras Entrada)
+        {
+            DataTable DtResultado = new DataTable("entrada");
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon.ConnectionString = Conexao.Cn;
+                SqlCommand SqlCmd = new SqlCommand();
+                SqlCmd.Connection = SqlCon;
+                SqlCmd.CommandText = "buscar_cliente";
+                SqlCmd.CommandType = CommandType.StoredProcedure;
+                
+
+                SqlParameter ParTextoBuscar = new SqlParameter();
+                ParTextoBuscar.ParameterName = "@textobuscar";
+                ParTextoBuscar.SqlDbType = SqlDbType.VarChar;
+                ParTextoBuscar.Size = 50;
+                ParTextoBuscar.Value = Entrada.TextoBuscar;
+                SqlCmd.Parameters.Add(ParTextoBuscar);
+
+                SqlDataAdapter sqlDat = new SqlDataAdapter(SqlCmd);
+                sqlDat.Fill(DtResultado);
+
+            }
+            catch (Exception ex)
+            {
+                DtResultado = null;
+            }
+            return DtResultado;
+
+        }
